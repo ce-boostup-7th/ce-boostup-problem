@@ -1,2 +1,2 @@
-module.exports.connect = "127.0.0.1:1323";
+module.exports.connect = "161.246.34.96:1323";
 module.exports.path = "/ou";
