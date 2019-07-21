@@ -94,7 +94,7 @@ export default {
   },
   methods: {
     updateTestcase: function(index) {
-      let url = `http://${connect + path}/problems/${
+      let url = `${connect + path}/problems/${
         this.idProblem
       }/testcases/${index}`;
       let data = {
@@ -108,7 +108,7 @@ export default {
         .catch(error => console.error("Error:", error));
     },
     deleteTestcase: function(index) {
-      let url = `http://${connect + path}/problems/${
+      let url = `${connect + path}/problems/${
         this.idProblem
       }/testcases/${index}`;
       getData(url, {}, "DELETE")
@@ -122,7 +122,7 @@ export default {
     addArrayTestcase: function() {
       this.testcase.push({ in: "", out: "" });
 
-      let url = `http://${connect + path}/problems/${this.idProblem}/testcases`;
+      let url = `${connect + path}/problems/${this.idProblem}/testcases`;
       let data = {
         input: this.testcase[this.numTestCase].in,
         output: this.testcase[this.numTestCase].out
@@ -137,7 +137,7 @@ export default {
     },
     addData: function() {
       let url =
-        `http://${connect + path}/problems` +
+        `${connect + path}/problems` +
         (this.idProblem == -1 ? "" : "/" + this.idProblem);
       let data = {
         title: this.title,

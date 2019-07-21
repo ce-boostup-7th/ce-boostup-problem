@@ -22,7 +22,7 @@ import { connect, path } from "./../config";
 export default {
   methods: {
     login: function() {
-      let url = `http://${connect + path}/login`;
+      let url = `${connect + path}/login`;
       let data = {
         username: "motor",
         password: "rolas"
