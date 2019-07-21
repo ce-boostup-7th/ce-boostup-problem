@@ -25,8 +25,8 @@
           <v-textarea outline label="description" v-model="description"></v-textarea>
         </v-flex>
       </v-layout>
-      <v-tabs color="cyan" dark slider-color="yellow" class="white elevation-1">
-        <v-tab v-for="n in numTestCase" :key="n" ripple>Testcase {{ n }}</v-tab>
+      <v-tabs color="cyan" dark slider-color="yellow" class="white elevation-1" show-arrows>
+        <v-tab v-for="n in numTestCase" :key="n" ripple>case {{ n }}</v-tab>
         <v-tab ripple @click="addArrayTestcase" :key="9999" :disabled="idProblem==-1">Add+</v-tab>
         <v-tab-item v-for="n in numTestCase" :key="n">
           <v-layout row wrap>
@@ -57,10 +57,17 @@
 <script>
 import { connect, path } from "./../config";
 
+var serialize = function(obj) {
+  var str = [];
+  for (var p in obj)
+    if (obj.hasOwnProperty(p)) {
+      str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+    }
+  return str.join("&");
+};
+
 let getData = function(url, data, type) {
-  var queryString = Object.keys(data)
-    .map(key => key + "=" + data[key])
-    .join("&");
+  var queryString = serialize(data);
 
   return fetch(url, {
     method: type, // *GET, POST, PUT, DELETE, etc.
