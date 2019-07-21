@@ -17,12 +17,12 @@
 </template>
 
 <script>
-import { connect } from "./../config";
+import { connect, path } from "./../config";
 
 export default {
   methods: {
     login: function() {
-      let url = `http://${connect}/login`;
+      let url = `http://${connect + path}/login`;
       let data = {
         username: "motor",
         password: "rolas"
@@ -44,10 +44,13 @@ export default {
         referrer: "no-referrer", // no-referrer, *client
         body: queryString // body data type must match "Content-Type" header
       })
-        .then(res => res.text())
+        .then(res => {
+          if (res.status == 401) return 401;
+          return res.text();
+        })
         .then(response => {
           console.log("Success:", response);
-          this.$router.push("about");
+          if (response != 401) this.$router.push("about");
         })
         .catch(error => console.error("Error:", error));
     }

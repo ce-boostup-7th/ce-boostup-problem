@@ -6,29 +6,31 @@
           <v-text-field outline label="title" v-model="title"></v-text-field>
         </v-flex>
         <v-flex xs12 sm6>
-          <v-text-field outline label="categoryid" v-model="category_id"></v-text-field>
+          <v-rating v-model="difficulty" background-color="orange lighten-3" color="orange" x-large></v-rating>
         </v-flex>
         <v-flex xs12 sm6>
-          <v-text-field outline label="tags"></v-text-field>
+          <v-select
+            :items="items"
+            item-text="text"
+            item-value="val"
+            v-model="category_id"
+            label="categoryid"
+            outline
+          ></v-select>
         </v-flex>
-        <v-flex xs12 sm6>
-          <v-text-field outline label="difficulty" v-model="difficulty"></v-text-field>
-        </v-flex>
+
         <v-flex xs12>
           <v-textarea outline label="description" v-model="description"></v-textarea>
         </v-flex>
       </v-layout>
       <v-tabs color="cyan" dark slider-color="yellow" class="white elevation-1">
         <v-tab v-for="n in numTestCase" :key="n" ripple>Testcase {{ n }}</v-tab>
-        <v-tab ripple @click="addArrayTestcase" :key="9999">Add+</v-tab>
+        <v-tab ripple @click="addArrayTestcase" :key="9999" :disabled="idProblem==-1">Add+</v-tab>
         <v-tab-item v-for="n in numTestCase" :key="n">
           <v-layout row wrap>
             <v-flex xs12>
-              <v-btn
-                color="success"
-                @click="deleteTestcase(n-1)"
-                :disabled="testcase[n-1].add"
-              >Delete this testcase {{testcase[n-1].notadd}}</v-btn>
+              <v-btn color="success" @click="updateTestcase(n-1)">Update this testcase</v-btn>
+              <v-btn color="error" @click="deleteTestcase(n-1)">Delete this testcase</v-btn>
             </v-flex>
             <v-flex xs6>
               <v-textarea outline label="INPUT" v-model="testcase[n-1].in"></v-textarea>
@@ -43,7 +45,6 @@
       <v-layout row wrap class="pt-5">
         <v-flex xs12>
           <v-btn color="success" @click="addData">{{idProblem==-1?"Submit":"Update"}} Data</v-btn>
-          <v-btn color="success" @click="addTestcase" :disabled="idProblem==-1">Add testcase</v-btn>
           <v-btn color="warning" @click="clear">Reset (New problems)</v-btn>
         </v-flex>
       </v-layout>
@@ -82,16 +83,56 @@ export default {
       difficulty: "",
       description: "",
       testcase: [],
-      idProblem: -1
+      idProblem: -1,
+      items: [
+        { text: "Basic", val: "1" },
+        { text: "Condition", val: "2" },
+        { text: "Loop", val: "3" },
+        { text: "Function", val: "4" }
+      ]
     };
   },
   methods: {
+    updateTestcase: function(index) {
+      let url = `http://${connect + path}/problems/${
+        this.idProblem
+      }/testcases/${index}`;
+      let data = {
+        input: this.testcase[index].in,
+        output: this.testcase[index].out
+      };
+      getData(url, data, "PUT")
+        .then(response => {
+          console.log("Success:", response);
+        })
+        .catch(error => console.error("Error:", error));
+    },
     deleteTestcase: function(index) {
-      this.testcase.splice(index, 1);
-      this.numTestCase--;
+      let url = `http://${connect + path}/problems/${
+        this.idProblem
+      }/testcases/${index}`;
+      getData(url, {}, "DELETE")
+        .then(response => {
+          console.log("Success:", response);
+          this.testcase.splice(index, 1);
+          this.numTestCase--;
+        })
+        .catch(error => console.error("Error:", error));
     },
     addArrayTestcase: function() {
-      this.testcase.push({ in: "", out: "", add: false });
+      this.testcase.push({ in: "", out: "" });
+
+      let url = `http://${connect + path}/problems/${this.idProblem}/testcases`;
+      let data = {
+        input: this.testcase[this.numTestCase].in,
+        output: this.testcase[this.numTestCase].out
+      };
+      getData(url, data, "POST")
+        .then(response => {
+          console.log("Success:", response);
+        })
+        .catch(error => console.error("Error:", error));
+
       this.numTestCase++;
     },
     addData: function() {
@@ -108,32 +149,12 @@ export default {
       getData(url, data, this.idProblem == -1 ? "POST" : "PUT")
         .then(response => {
           console.log("Success:", response);
-          if (this.idProblem == -1) this.idProblem = response;
+          let json = JSON.parse(response);
+          if (this.idProblem == -1) this.idProblem = json.id;
         })
         .catch(error => console.error("Error:", error));
     },
-    addTestcase: function() {
-      if (this.idProblem == -1) return;
-      if (this.saveTestcase == true) return;
-      let url = `http://${connect + path}/problems/${
-        this.idProblem
-      }/testcases/`;
-
-      for (let i = 0; i < this.numTestCase; i++) {
-        if (this.testcase[i].add) continue;
-        let data = {
-          input: this.testcase[i].in,
-          output: this.testcase[i].out
-        };
-        this.testcase[i].add = true;
-        getData(url, data, "POST")
-          .then(response => {
-            console.log("Success:", response);
-            this.$forceUpdate();
-          })
-          .catch(error => console.error("Error:", error));
-      }
-    },
+    addTestcase: function() {},
     clear: function() {
       this.numTestCase = 0;
       this.title = "";
