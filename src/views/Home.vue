@@ -50,7 +50,7 @@ export default {
         })
         .then(response => {
           console.log("Success:", response);
-          if (response != 401) this.$router.push("about");
+          if (response != 401) this.$router.push("list");
         })
         .catch(error => console.error("Error:", error));
     }

@@ -2,13 +2,11 @@
   <v-form>
     <v-container>
       <v-layout row wrap>
-        <v-flex xs12 sm6>
+        <v-flex sm12 lg6>
           <v-text-field outline label="title" v-model="title"></v-text-field>
         </v-flex>
-        <v-flex xs12 sm6>
-          <v-rating v-model="difficulty" background-color="orange lighten-3" color="orange" x-large></v-rating>
-        </v-flex>
-        <v-flex xs12 sm6>
+
+        <v-flex sm12 lg6>
           <v-select
             :items="items"
             item-text="text"
@@ -17,6 +15,10 @@
             label="categoryid"
             outline
           ></v-select>
+        </v-flex>
+
+        <v-flex sm12 lg6>
+          <v-rating v-model="difficulty" background-color="orange lighten-3" color="orange" x-large></v-rating>
         </v-flex>
 
         <v-flex xs12>
@@ -40,7 +42,7 @@
             </v-flex>
           </v-layout>
         </v-tab-item>
-        <v-tab-item :key="9999">Add new test case finish</v-tab-item>
+        <v-tab-item :key="9999">Add new test case finish {{id}}</v-tab-item>
       </v-tabs>
       <v-layout row wrap class="pt-5">
         <v-flex xs12>
@@ -75,12 +77,18 @@ let getData = function(url, data, type) {
   }).then(res => res.text());
 };
 export default {
+  props: {
+    id: {
+      type: Number,
+      default: -1
+    }
+  },
   data() {
     return {
       numTestCase: 0,
       title: "",
       category_id: "",
-      difficulty: "",
+      difficulty: 1,
       description: "",
       testcase: [],
       idProblem: -1,
@@ -159,10 +167,50 @@ export default {
       this.numTestCase = 0;
       this.title = "";
       this.category_id = "";
-      this.difficulty = "";
+      this.difficulty = 1;
       this.description = "";
       this.testcase = [];
       this.idProblem = -1;
+    }
+  },
+  watch: {
+    // whenever question changes, this function will run
+    id: function(newID) {
+      if (this.id != -1) {
+        fetch(`${connect + path}/problems/${this.id}`, {
+          method: "GET"
+        })
+          .then(res => res.json())
+          .then(response => {
+            console.log("Success:", response);
+            this.problem = response;
+            this.title = response.title;
+            this.category_id = response.category_id;
+            this.difficulty = response.difficulty;
+            this.description = response.description;
+            this.idProblem = response.id;
+          })
+          .catch(error => console.error("Error:", error));
+
+        fetch(`${connect + path}/problems/${this.id}/testcases`, {
+          method: "GET"
+        })
+          .then(res => res.json())
+          .then(response => {
+            console.log("Success:", response);
+            this.testcase = [];
+            this.numTestCase = response.length;
+            for (let i = 0; i < response.length; i++) {
+              this.testcase.push({
+                in: response[i].input,
+                out: response[i].output
+              });
+            }
+          })
+          .catch(error => console.error("Error:", error));
+      } else {
+        this.clear();
+      }
     }
   }
 };
