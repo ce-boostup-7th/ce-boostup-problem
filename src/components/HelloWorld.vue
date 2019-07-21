@@ -52,6 +52,8 @@
 </template>
 
 <script>
+import { connect, path } from "./../config";
+
 let getData = function(url, data, type) {
   var queryString = Object.keys(data)
     .map(key => key + "=" + data[key])
@@ -94,7 +96,7 @@ export default {
     },
     addData: function() {
       let url =
-        "http://161.246.34.96:1323/problems" +
+        `http://${connect + path}/problems` +
         (this.idProblem == -1 ? "" : "/" + this.idProblem);
       let data = {
         title: this.title,
@@ -113,8 +115,9 @@ export default {
     addTestcase: function() {
       if (this.idProblem == -1) return;
       if (this.saveTestcase == true) return;
-      let url =
-        "http://161.246.34.96:1323/problems/testcases/" + this.idProblem;
+      let url = `http://${connect + path}/problems/${
+        this.idProblem
+      }/testcases/`;
 
       for (let i = 0; i < this.numTestCase; i++) {
         if (this.testcase[i].add) continue;
