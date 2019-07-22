@@ -17,12 +17,12 @@
 </template>
 
 <script>
-import { connect, path } from "./../config";
+import { connect } from "./../config";
 
 export default {
   methods: {
     login: function() {
-      let url = `${connect + path}/login`;
+      let url = `${connect}/login`;
       let data = {
         username: "motor",
         password: "rolas"

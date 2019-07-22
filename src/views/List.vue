@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { connect, path } from "./../config";
+import { connect } from "./../config";
 import HelloWorld from "../components/HelloWorld";
 
 export default {
@@ -85,7 +85,7 @@ export default {
   },
   methods: {
     fetch() {
-      fetch(`${connect + path}/problems`, {
+      fetch(`${connect}/problems`, {
         method: "GET"
       })
         .then(res => res.json())
@@ -103,7 +103,7 @@ export default {
 
     deleteItem(item) {
       if (confirm("Are you sure you want to delete this item?")) {
-        fetch(`${connect + path}/problems/${item.id}`, {
+        fetch(`${connect}/problems/${item.id}`, {
           method: "DELETE"
         })
           .then(res => res.json())

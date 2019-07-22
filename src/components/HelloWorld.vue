@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { connect, path } from "./../config";
+import { connect } from "./../config";
 
 var serialize = function(obj) {
   var str = [];
@@ -109,9 +109,7 @@ export default {
   },
   methods: {
     updateTestcase: function(index) {
-      let url = `${connect + path}/problems/${
-        this.idProblem
-      }/testcases/${index}`;
+      let url = `${connect}/problems/${this.idProblem}/testcases/${index}`;
       let data = {
         input: this.testcase[index].in,
         output: this.testcase[index].out
@@ -123,9 +121,7 @@ export default {
         .catch(error => console.error("Error:", error));
     },
     deleteTestcase: function(index) {
-      let url = `${connect + path}/problems/${
-        this.idProblem
-      }/testcases/${index}`;
+      let url = `${connect}/problems/${this.idProblem}/testcases/${index}`;
       getData(url, {}, "DELETE")
         .then(response => {
           console.log("Success:", response);
@@ -137,7 +133,7 @@ export default {
     addArrayTestcase: function() {
       this.testcase.push({ in: "", out: "" });
 
-      let url = `${connect + path}/problems/${this.idProblem}/testcases`;
+      let url = `${connect}/problems/${this.idProblem}/testcases`;
       let data = {
         input: this.testcase[this.numTestCase].in,
         output: this.testcase[this.numTestCase].out
@@ -152,7 +148,7 @@ export default {
     },
     addData: function() {
       let url =
-        `${connect + path}/problems` +
+        `${connect}/problems` +
         (this.idProblem == -1 ? "" : "/" + this.idProblem);
       let data = {
         title: this.title,
@@ -182,9 +178,9 @@ export default {
   },
   watch: {
     // whenever question changes, this function will run
-    id: function(newID) {
+    id: function() {
       if (this.id != -1) {
-        fetch(`${connect + path}/problems/${this.id}`, {
+        fetch(`${connect}/problems/${this.id}`, {
           method: "GET"
         })
           .then(res => res.json())
@@ -199,7 +195,7 @@ export default {
           })
           .catch(error => console.error("Error:", error));
 
-        fetch(`${connect + path}/problems/${this.id}/testcases`, {
+        fetch(`${connect}/problems/${this.id}/testcases`, {
           method: "GET"
         })
           .then(res => res.json())
