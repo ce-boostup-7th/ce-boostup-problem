@@ -45,7 +45,10 @@ export default {
         body: queryString // body data type must match "Content-Type" header
       })
         .then(res => {
-          if (res.status == 401) return 401;
+          if (Math.floor(res.status / 100) != 2) {
+            alert("ERROR::Respond\n\n" + res.text());
+            return res.status;
+          }
           return res.text();
         })
         .then(response => {

@@ -3,7 +3,7 @@
     <v-container>
       <v-layout row wrap>
         <v-flex sm12 lg6>
-          <v-text-field outline label="title" v-model="title"></v-text-field>
+          <v-text-field outline label="title" v-model="title" counter maxlength="100"></v-text-field>
         </v-flex>
 
         <v-flex sm12 lg6>
@@ -81,7 +81,13 @@ let getData = function(url, data, type) {
     redirect: "follow", // manual, *follow, error
     referrer: "no-referrer", // no-referrer, *client
     body: queryString // body data type must match "Content-Type" header
-  }).then(res => res.text());
+  }).then(res => {
+    if (Math.floor(res.status / 100) != 2) {
+      alert("ERROR::Respond\n\n" + res.text());
+      return res.status;
+    }
+    return res.text();
+  });
 };
 export default {
   props: {
@@ -183,7 +189,13 @@ export default {
         fetch(`${connect}/problems/${this.id}`, {
           method: "GET"
         })
-          .then(res => res.json())
+          .then(res => {
+            if (Math.floor(res.status / 100) != 2) {
+              alert("ERROR::Respond\n\n" + res.text());
+              return res.status;
+            }
+            return res.json();
+          })
           .then(response => {
             console.log("Success:", response);
             this.problem = response;
@@ -198,7 +210,13 @@ export default {
         fetch(`${connect}/problems/${this.id}/testcases`, {
           method: "GET"
         })
-          .then(res => res.json())
+          .then(res => {
+            if (Math.floor(res.status / 100) != 2) {
+              alert("ERROR::Respond\n\n" + res.text());
+              return res.status;
+            }
+            return res.json();
+          })
           .then(response => {
             console.log("Success:", response);
             this.testcase = [];

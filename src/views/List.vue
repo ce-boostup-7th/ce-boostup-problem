@@ -88,7 +88,13 @@ export default {
       fetch(`${connect}/problems`, {
         method: "GET"
       })
-        .then(res => res.json())
+        .then(res => {
+          if (Math.floor(res.status / 100) != 2) {
+            alert("ERROR::Respond\n\n" + res.text());
+            return res.status;
+          }
+          return res.json();
+        })
         .then(response => {
           console.log("Success:", response);
           this.problem = response;
@@ -106,7 +112,13 @@ export default {
         fetch(`${connect}/problems/${item.id}`, {
           method: "DELETE"
         })
-          .then(res => res.json())
+          .then(res => {
+            if (Math.floor(res.status / 100) != 2) {
+              alert("ERROR::Respond\n\n" + res.text());
+              return res.status;
+            }
+            return res.json();
+          })
           .then(response => {
             console.log("Success:", response);
             this.fetch();
@@ -122,15 +134,6 @@ export default {
         this.editedIndex = -1;
       }, 300);
     }
-
-    // save() {
-    //   if (this.editedIndex > -1) {
-    //     Object.assign(this.desserts[this.editedIndex], this.editedItem);
-    //   } else {
-    //     this.desserts.push(this.editedItem);
-    //   }
-    //   this.close();
-    // }
   }
 };
 </script>
