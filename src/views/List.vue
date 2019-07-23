@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { connect } from "./../config";
+import { connect, adminPath } from "./../config";
 import HelloWorld from "../components/HelloWorld";
 
 export default {
@@ -109,7 +109,7 @@ export default {
 
     deleteItem(item) {
       if (confirm("Are you sure you want to delete this item?")) {
-        fetch(`${connect}/problems/${item.id}`, {
+        fetch(`${connect + adminPath}/problems/${item.id}`, {
           method: "DELETE"
         })
           .then(res => {
