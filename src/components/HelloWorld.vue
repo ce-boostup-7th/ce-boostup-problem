@@ -201,7 +201,6 @@ export default {
             return res.json();
           })
           .then(response => {
-            response = response.problem;
             console.log("Success:", response);
             this.problem = response;
             this.title = response.title;
