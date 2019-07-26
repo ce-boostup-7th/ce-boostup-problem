@@ -109,7 +109,8 @@ export default {
         { text: "Basic", val: "1" },
         { text: "Condition", val: "2" },
         { text: "Loop", val: "3" },
-        { text: "Function", val: "4" }
+        { text: "Function", val: "4" },
+        { text: "Examination", val: "5" }
       ]
     };
   },
