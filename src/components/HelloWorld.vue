@@ -35,10 +35,10 @@
               <v-btn color="error" @click="deleteTestcase(n-1)">Delete this testcase</v-btn>
             </v-flex>
             <v-flex xs6>
-              <v-textarea outline label="INPUT" v-model="testcase[n-1].in"></v-textarea>
+              <v-textarea outline label="INPUT" v-model="testcase[n-1].in" class="nowarp"></v-textarea>
             </v-flex>
             <v-flex xs6>
-              <v-textarea outline label="OUTPUT" v-model="testcase[n-1].out"></v-textarea>
+              <v-textarea outline label="OUTPUT" v-model="testcase[n-1].out" class="nowarp"></v-textarea>
             </v-flex>
           </v-layout>
         </v-tab-item>
@@ -245,5 +245,9 @@ export default {
 <style>
 textarea {
   font-family: monospace;
+}
+
+.nowarp div div div textarea {
+  white-space: nowrap !important;
 }
 </style>
